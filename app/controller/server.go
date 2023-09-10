@@ -2,8 +2,10 @@ package controller
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
-	controller "github.com/BelCattaneo/go-app/controller/chat"
+	controller "github.com/BelCattaneo/go-chat/app/controller/chat"
 	"github.com/gorilla/mux"
 )
 
@@ -17,5 +19,5 @@ func Start() {
 	router = mux.NewRouter()
 	initHandlers()
 	fmt.Printf("router initialized and listening on 3200\n")
-
+	log.Fatal(http.ListenAndServe(":3200", router))
 }
