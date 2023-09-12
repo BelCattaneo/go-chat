@@ -3,26 +3,25 @@ package main
 import (
 	"fmt"
 
-	controller "github.com/BelCattaneo/go-chat/app/controller"
-	db "github.com/BelCattaneo/go-chat/app/db"
+	"github.com/BelCattaneo/go-chat/app/controller"
+	"github.com/BelCattaneo/go-chat/app/database"
 	"github.com/gin-gonic/gin"
 )
+
+func initHandlers() {
+	r := gin.Default()
+
+	r.POST("/user/new", controller.CreateUser)
+
+	r.Run() // listen and serve on 0.0.0.0:8080
+}
 
 func main() {
 
 	fmt.Println("Starting connection to database")
-	conn, _ := db.ConnectDB()
-	db.CreateTables(conn)
+	database.ConnectDB()
+	database.CreateTables()
 
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-		fmt.Println("pong madafaka!!!")
-	})
-	r.POST("/user/new", controller.CreateUser)
-
-	r.Run() // listen and serve on 0.0.0.0:8080
+	initHandlers()
 
 }
