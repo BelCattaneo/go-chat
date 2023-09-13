@@ -12,6 +12,9 @@ func initHandlers() {
 	r := gin.Default()
 
 	r.POST("/user/new", controller.CreateUser)
+	r.POST("/room/new", controller.CreateRoom)
+	r.PUT("/user/room/enter", controller.EnterRoom)
+	r.PUT("/user/room/leave", controller.LeaveRoom)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

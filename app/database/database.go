@@ -37,6 +37,7 @@ func ConnectDB() (*gorm.DB, error) {
 
 func CreateTables(conn *gorm.DB) {
 	conn.AutoMigrate(&model.User{}, &model.Room{})
+	conn.Model(&model.Room{}).Association("Users")
 }
 
 func SetupDB() {

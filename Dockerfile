@@ -19,11 +19,12 @@ COPY .env .
 # Download all the dependencies
 RUN go get -d -v ./...
 
+
 # Install the package
 RUN go install -v ./... 
 
-# Build the Go app
-RUN go build -o /build
+RUN go get github.com/githubnemo/CompileDaemon
+RUN go install github.com/githubnemo/CompileDaemon
 
-# Run the executable
-CMD [ "/build" ]
+# Build the Go app
+ENTRYPOINT CompileDaemon --build="go build main.go" --command="./main"
