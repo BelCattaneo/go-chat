@@ -19,8 +19,8 @@ func initHandlers() {
 func main() {
 
 	fmt.Println("Starting connection to database")
-	database.ConnectDB()
-	database.CreateTables()
+
+	database.SetupDB()
 
 	initHandlers()
 

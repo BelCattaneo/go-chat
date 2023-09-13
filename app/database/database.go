@@ -10,10 +10,6 @@ import (
 	"github.com/BelCattaneo/go-chat/app/model"
 )
 
-var (
-	DB *gorm.DB // Exported variable
-)
-
 // database variables
 // TODO: get them from env like os.Getenv("variableName")
 const (
@@ -27,19 +23,25 @@ const (
 // ConnectDB tries to connect DB and on succcesful it returns
 // nil error, otherwise return corresponding error.
 // it stores db conn in package exported variable
-func ConnectDB() error {
+func ConnectDB() (*gorm.DB, error) {
 	connString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	var err error
-	DB, err = gorm.Open(postgres.Open(connString), &gorm.Config{})
+	conn, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
 
 	if err != nil {
 		log.Printf("failed to connect to database: %v", err)
-		return err
+		return &gorm.DB{}, err
 	}
 	fmt.Println("connected to database")
-	return nil
+	return conn, nil
 }
 
-func CreateTables() {
-	DB.AutoMigrate(&model.User{}, &model.Room{})
+func CreateTables(conn *gorm.DB) {
+	conn.AutoMigrate(&model.User{}, &model.Room{})
+}
+
+func SetupDB() {
+	conn, _ := ConnectDB()
+	CreateTables(conn)
+	db, _ := conn.DB()
+	defer db.Close()
 }
